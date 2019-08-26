@@ -14,7 +14,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Tmux - Copper | Blog
+          [Tools] Tmux - Copper | Blog
         
     </title>
 
@@ -88,9 +88,11 @@
                     <div class="post-heading">
                         <div class="tags">
                             
+                              <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
+                            
                         </div>
-                        <h1>Tmux</h1>
-                        <h2 class="subheading"></h2>
+                        <h1>[Tools] Tmux</h1>
+                        <h2 class="subheading">Tmux 基本操作</h2>
                         <span class="meta">
                             Posted by Copper on
                             2019-08-22
@@ -147,14 +149,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -210,7 +212,33 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <blockquote>
+<p>Tmux is a terminal multiplexer. 来源于掘金：<a href="https://juejin.im/post/5a8917336fb9a0633e51ddb9" target="_blank" rel="noopener">https://juejin.im/post/5a8917336fb9a0633e51ddb9</a></p>
+</blockquote>
+<h1 id="why">Why</h1>
+<p>tmux 是一个终端复用器: 可以激活多个终端或窗口, 在每个终端都可以单独访问，每一个终端都可以访问，运行和控制各自的程序.tmux类似于screen，可以关闭窗口将程序放在后台运行，需要的时候再重新连接。</p>
+<h1 id="install-tmux">Install Tmux</h1>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew/conda/pip install tmux</span><br></pre></td></tr></table></figure>
+<h1 id="config">Config</h1>
+<p><code>Tmux</code>默认不支持鼠标滚动查看窗口中的前后内容。需要修改配置来支持。</p>
+<p><code>touch ~/.tmux.conf</code></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启鼠标模式</span></span><br><span class="line">set-option -g mouse on</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许鼠标选择窗格</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">set</span> -g mouse-select-pane on</span></span><br><span class="line">​</span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果喜欢给窗口自定义命名，那么需要关闭窗口的自动命名</span></span><br><span class="line">set-option -g allow-rename off</span><br><span class="line">​</span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果对 vim 比较熟悉，可以将 copy mode 的快捷键换成 vi 模式</span></span><br><span class="line">set-window-option -g mode-keys vi</span><br></pre></td></tr></table></figure>
+<h1 id="conception">Conception</h1>
+<p>tmux的主要元素分为三层：</p>
+<ul>
+<li><code>Session</code> 一组窗口的集合，通常用来概括同一个任务。session可以有自己的名字便于任务之间的切换。</li>
+<li><code>Window</code> 单个可见窗口。Windows有自己的编号，也可以认为和ITerm2中的Tab类似。</li>
+<li><code>Pane</code> 窗格，被划分成小块的窗口，类似于Vim中 C-w +v 后的效果。 一图以蔽之：<br>
+<img src="/img/article/tmux.jpg" alt=""></li>
+</ul>
+<h1 id="session">Session</h1>
+<p>Tmux为了防止与全局快捷键冲突，大部分快捷键需要先需要输入前缀Ctrl + b，下文用Prefix代替。</p>
+<p>Session主要相关命令如下：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> #</span><span class="bash"> 创建</span></span><br><span class="line">tmux new # 不指定session name</span><br><span class="line">tmux new -s [session-name]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除Session</span></span><br><span class="line">tmux kill-session -t [session-name]</span><br><span class="line">tmux kill-server</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出当前Session</span></span><br><span class="line">tmux ls # </span><br><span class="line">Prefix s # tmux 内</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复Session</span></span><br><span class="line">tmux a -t [session-name]</span><br><span class="line">tmux a</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 断开Session</span></span><br><span class="line">tmux detach</span><br><span class="line">Prefix d</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重命名Session</span></span><br><span class="line">Prefix $</span><br></pre></td></tr></table></figure>
+<h1 id="window">Window</h1>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> #</span><span class="bash"> 创建</span></span><br><span class="line">Prefix c</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 选择窗口</span></span><br><span class="line">Prefix + [number] # 选择第n个窗口</span><br><span class="line">Prefix + p/n	# 前/后一个窗口</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭窗口</span></span><br><span class="line">Prefix &amp;</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有window（包含其他Session）</span></span><br><span class="line">Prefix w </span><br><span class="line">j/k # 前后选择</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 搜索窗口</span></span><br><span class="line">Prefix f</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重命名当前窗口</span></span><br><span class="line">Prefix ,</span><br></pre></td></tr></table></figure>
+<h1 id="pane">Pane</h1>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"> #</span><span class="bash"> 创建</span></span><br><span class="line">Prefix %	# 水平窗格</span><br><span class="line">Prefix '"'	# 垂直窗格</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭</span></span><br><span class="line">Prefix x</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换</span></span><br><span class="line">Prefix o # 在窗格间切换</span><br><span class="line">Prefix q	# 显示窗格编号，输入编号切换</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将当前窗格切换到新窗口</span></span><br><span class="line">Prefix ！</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 窗格交换位置</span></span><br><span class="line">Prefix + &#123;/&#125;</span><br></pre></td></tr></table></figure>
                 
 
                 <hr>
@@ -219,7 +247,7 @@
                     
                     
                         <li class="next">
-                            <a href="/article/hexo-theme-huweihuang/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme HuWeihuang">Next Post &rarr;</a>
+                            <a href="/article/hexo-theme-huweihuang/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -264,18 +292,12 @@
             <!-- Table of Contents -->
 
   
-    <style>
-      span.toc-nav-number{
-        display: none
-      }
-    </style>
-  
     
       <aside id="sidebar">
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#why"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Why</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#install-tmux"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Install Tmux</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#config"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Config</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#conception"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Conception</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#session"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">Session</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#window"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">Window</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#pane"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">Pane</span></a></li></ol>
         
         </div>
       </aside>
@@ -295,6 +317,8 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
+                        
                     </div>
                 </section>
                 

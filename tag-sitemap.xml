@@ -3,7 +3,14 @@
 
     <url>
         <loc>http://www.dhuleitao.top/tags/Hexo/</loc>
-        <lastmod>2019-08-16T12:43:34.000Z</lastmod>
+        <lastmod>2019-08-23T08:05:23.657Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://www.dhuleitao.top/tags/Tools/</loc>
+        <lastmod>2019-08-23T08:09:43.683Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
